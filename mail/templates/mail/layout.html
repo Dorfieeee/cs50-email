@@ -20,7 +20,23 @@
                 <!-- Toolbar -->
                 <div class="toolbar">
                     <div class="menu">
-                        <h3 id="mailbox-name"></h3>
+                        <div id="mailbox-name"></div>
+ 
+                        <div id="mailbox-info">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="unread-only-filter">
+                                <label class="form-check-label" for="unread-only-filter">
+                                    Unread only
+                                </label>
+                            </div>
+                            <div id="mailbox-size"></div>
+                            <div class="action-list">
+                                <ul>
+                                    <li class="pr" id="prev-page" title="" data-toggle="tooltip" tabindex="0" data-original-title="Newer"></li>
+                                    <li class="nx" id="next-page" title="" data-toggle="tooltip" tabindex="0" data-original-title="Older"></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- View container -->

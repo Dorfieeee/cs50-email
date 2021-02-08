@@ -2,42 +2,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
   console.clear();
 
-
   // Use buttons to toggle between views
-  document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
-  document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
-  document.querySelector('#archive').addEventListener('click', () => load_mailbox('archive'));
-  document.querySelector('#compose').addEventListener('click', () => compose_email());
+  document.querySelector('#inbox').addEventListener('click', () => { load_mailbox('inbox') });
+  document.querySelector('#sent').addEventListener('click', () => { load_mailbox('sent') });
+  document.querySelector('#archive').addEventListener('click', () => { load_mailbox('archive') });
+  document.querySelector('#compose').addEventListener('click', () => { compose_email() });
+  
 
   ACTIVE_VIEW = "inbox";
+  MAILBOX = [];
   
   // By default, load the inbox
   load_mailbox(ACTIVE_VIEW);
   
 });
 
-
-function next_page(e) {
-  e.target.blur();
-
-  if (MAILBOX.step + 1 === Math.ceil(MAILBOX.active.length / MAILBOX.stepSize)) {
-    return;
-  }
-
-  MAILBOX.step++;
-  render_mails();
-}
-
-function prev_page(e) {
-  e.target.blur();
-
-  if (MAILBOX.step <= 0) {
-    return;
-  }
-
-  MAILBOX.step--;
-  render_mails();
-}
+// Initialize globals
+let MAILBOX;
+let ACTIVE_VIEW;
 
 function set_active() {
   document.querySelector('#mailbox-name').innerHTML = `${ACTIVE_VIEW.charAt(0).toUpperCase() + ACTIVE_VIEW.slice(1)}`;
@@ -172,95 +154,46 @@ function compose_email(mail) {
 }
 
 async function load_mailbox(type) {
-  let mails;
+  const table_list = document.querySelector('#mailbox-table-list');
+
   // Clear table from tooltips
   $(".tooltip").tooltip("dispose");
 
   // Show the mailbox type and hide other views
   change_view_to("mailbox-view");
 
-  // Use buttons to list through mailbox
-  document.querySelector('#prev-page').onclick = function(e) { prev_page(e); };
-  document.querySelector('#next-page').onclick = function(e) { next_page(e); };
-
-  // unread filter
-  MAILBOX.filters.unreadOnly = document.querySelector("#unread-only-filter").checked;
-  document.querySelector("#unread-only-filter").onchange = function(e) { MAILBOX.filters.unreadOnly = e.target.checked; render_mails(); }
-
-  // Set active view and reset step count
+  // Show the mailbox type name
   ACTIVE_VIEW = type;
-  MAILBOX.step = 0;
 
-  // Set active tabs in navigation
   set_active();
 
   // API call to get all mails within specified mailbox
   try {
     const response = await fetch("/emails/" + type);
-    mails = await response.json();
+    var mails = await response.json();
     if (mails.error) {
       throw new Error(mails.error);
     }
 
   } catch (error) {
-    show_toast(error);
+    show_toast(error)
   }
   
-  if (mails.length === 0) {
-    // clear table
-    Array.from(document.querySelector('#mailbox-table-list').children).forEach(function(item) {
-      item.remove();
-    });
-    return;
-  };
+  // clear MAILBOX and table
+  MAILBOX = [];
+  Array.from(table_list.children).forEach(function(item) {
+    item.remove();
+  })
 
-  MAILBOX[type] = [...mails]
-  
-  // // Sort by date
-  // MAILBOX[type] = MAILBOX[type].sort(function(a, b) {
-    //   return new Date(a.timestamp).getTime() < new Date(b.timestamp).getTime();
-    // });
-    
-    // Finally render mails in table
-    render_mails();
+  // Update MAILBOX with new mails
+  mails.forEach(function(mail) {
+    MAILBOX.push(mail);
+  });
 
-}
-
-function render_mails() {
-  const table_body = document.querySelector('#mailbox-table-list');
-  MAILBOX.active = [...MAILBOX[ACTIVE_VIEW]];
-
-  if (MAILBOX.filters.unreadOnly) {
-    MAILBOX.active = MAILBOX.active.filter(function(mail) {
-      return !mail.read;
-    });
-  }
-
-  // get slice of mailbox depending on current step
-  let mails = MAILBOX.active.slice(MAILBOX.step * MAILBOX.stepSize, MAILBOX.step * MAILBOX.stepSize + MAILBOX.stepSize);
-  // decide how many times to loop
-  const size = mails.length >= table_body.rows.length ? mails.length : table_body.rows.length;
-
-  for (let index = 0; index < size; index++) {
-    // if there is mail
-    if (mails[index]) {
-      const new_row = create_mailbox_item(mails[index]); 
-      // if there already is rendered mail at this position, replace it with another
-      if (table_body.rows[index] !== undefined) {
-        let old_row = table_body.rows[index];
-        table_body.replaceChild(new_row, old_row);
-      // if not, append new one
-      } else {
-        table_body.appendChild(new_row);
-      }
-      continue;
-    }
-    // remove surplus mails from the table
-    table_body.deleteRow(-1);
-  }
-    
-  // Display toolbar info
-  update_table_info();
+  // Populate table
+  MAILBOX.forEach(function(mail) {
+    table_list.append(create_mailbox_item(mail));
+  })
 
   // Initialize tooltips
   $(function () {
@@ -396,14 +329,6 @@ function change_view_to(name) {
   });
   // Show desirable view
   views[pos].style.display = "block";
-
-  // Show/hide mailbox info
-  if (name !== "mailbox-view") {
-    document.querySelector("#mailbox-info").classList.add("hide");
-  } else {
-    document.querySelector("#mailbox-info").classList.remove("hide");
-  }
-
 }
 
 async function update_status(id, body, msg) {
@@ -451,31 +376,3 @@ function show_toast(msg) {
 
   $(toast).toast("show");
 }
-
-function update_table_info() {
-    // Display toolbar info
-    let size = (MAILBOX.step * MAILBOX.stepSize + MAILBOX.stepSize) < MAILBOX.active.length ? (MAILBOX.step * MAILBOX.stepSize + MAILBOX.stepSize) : MAILBOX.active.length;
-    document.querySelector("#mailbox-size").innerHTML = `${MAILBOX.step * MAILBOX.stepSize} - ${size} of ${MAILBOX.active.length}`;
-}
-
-// Initialize globals
-let ACTIVE_VIEW;
-const MAILBOX = {
-active: [],
-inbox: [],
-sent: [],
-archive: [],
-step: 0,
-stepSize: 30,
-filters: {
-  unreadOnly: false,
-  sender: null,
-  subject: null,
-}
-};
-
-
-
-
-
-

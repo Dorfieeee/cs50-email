@@ -107,17 +107,6 @@ textarea {
   min-height: 400px;
 }
 
-.toolbar {
-  height: 50px;
-  border-bottom: 1px solid rgba(112, 128, 144, 0.3);
-  padding: 10px 0;
-}
-.toolbar .menu {
-  height: 30px;
-  padding-left: 14px;
-  padding-right: 10px;
-}
-
 #main-view {
   height: calc(100vh - 60px - 50px);
   overflow-y: scroll;
@@ -177,78 +166,6 @@ textarea {
 .mailbox-row:not(.read) {
   font-weight: 700;
 }
-.mailbox-row .action-list ul {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.mailbox-row .action-list ul li {
-  position: relative;
-  opacity: 0.54;
-  height: 20px;
-  width: 20px;
-  border: none;
-  margin: 0 10px;
-  outline: none;
-  display: inline-flex;
-  z-index: 1;
-  background-size: 20px;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.mailbox-row .action-list ul li.re {
-  background-image: url("./icons/envelope-solid.svg");
-}
-.mailbox-row .action-list ul li.ur {
-  background-image: url("./icons/envelope-open-solid.svg");
-}
-.mailbox-row .action-list ul li.ar {
-  background-image: url("./icons/archive-solid.svg");
-}
-.mailbox-row .action-list ul li.ua {
-  background-image: url("./icons/box-open-solid.svg");
-}
-.mailbox-row .action-list ul li:hover, .mailbox-row .action-list ul li:focus {
-  opacity: 1;
-}
-.mailbox-row .action-list ul li:hover::before, .mailbox-row .action-list ul li:focus::before {
-  background-color: rgba(32, 33, 36, 0.059);
-  border: none;
-  box-shadow: none;
-  opacity: 1;
-  transform: scale(1);
-}
-.mailbox-row .action-list ul li::before {
-  content: "";
-  display: block;
-  opacity: 0;
-  position: absolute;
-  transition-duration: 0.15s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: -1;
-  bottom: -10px;
-  left: -10px;
-  right: -10px;
-  top: -10px;
-  background: none;
-  border-radius: 50%;
-  box-sizing: border-box;
-  transform: scale(0);
-  transition-property: transform, opacity;
-  bottom: -10px;
-  left: -10px;
-  right: -10px;
-  top: -10px;
-}
-.mailbox-row .action-list ul li::after {
-  content: "";
-  height: 200%;
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-}
 
 #email-view {
   padding-top: 16px;
@@ -278,6 +195,133 @@ textarea {
 }
 #email-view #email-body {
   margin-bottom: 1.5rem;
+}
+
+#mailbox-name {
+  font-size: 30px;
+  line-height: 30px;
+  font-weight: bold;
+}
+
+.action-list ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.action-list ul li {
+  position: relative;
+  opacity: 0.54;
+  height: 20px;
+  width: 20px;
+  border: none;
+  margin: 0 10px;
+  outline: none;
+  display: inline-flex;
+  z-index: 1;
+  background-size: 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.action-list ul li:hover, .action-list ul li:focus {
+  opacity: 1;
+}
+.action-list ul li:hover::before, .action-list ul li:focus::before {
+  background-color: rgba(32, 33, 36, 0.059);
+  border: none;
+  box-shadow: none;
+  opacity: 1;
+  transform: scale(1);
+}
+.action-list ul li::before {
+  content: "";
+  display: block;
+  opacity: 0;
+  position: absolute;
+  transition-duration: 0.15s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+  top: -10px;
+  background: none;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transform: scale(0);
+  transition-property: transform, opacity;
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+  top: -10px;
+}
+.action-list ul li::after {
+  content: "";
+  height: 200%;
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+}
+
+.nx {
+  background-image: url("./icons/angle-right-solid.svg");
+}
+
+.pr {
+  background-image: url("./icons/angle-left-solid.svg");
+}
+
+.re {
+  background-image: url("./icons/envelope-solid.svg");
+}
+
+.ur {
+  background-image: url("./icons/envelope-open-solid.svg");
+}
+
+.ar {
+  background-image: url("./icons/archive-solid.svg");
+}
+
+.ua {
+  background-image: url("./icons/box-open-solid.svg");
+}
+
+.toolbar {
+  height: 50px;
+  border-bottom: 1px solid rgba(112, 128, 144, 0.3);
+  padding: 10px 0;
+}
+.toolbar .action-list > ul > li {
+  background-size: 10px;
+  cursor: pointer;
+}
+.toolbar .action-list > ul > li::before {
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+  top: -10px;
+}
+.toolbar #mailbox-info {
+  display: flex;
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin-right: 8px;
+}
+.toolbar #mailbox-info.hide {
+  display: none;
+}
+.toolbar .menu {
+  height: 30px;
+  padding-left: 14px;
+  padding-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.toolbar .form-check {
+  margin-right: 16px;
 }
 
 /*# sourceMappingURL=styles.css.map */

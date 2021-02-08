@@ -1,4 +1,15 @@
-$icons: ("inbox": "inbox-solid", "compose": "plus-circle-solid", "sent": "paper-plane-solid", "archive": "archive-solid", "logout": "sign-out-alt-solid", "read": "envelope-solid", "unread": "envelope-open-solid", "unarchive": "box-open-solid");
+$icons: (
+    "inbox": "inbox-solid",
+    "compose": "plus-circle-solid",
+    "sent": "paper-plane-solid",
+    "archive": "archive-solid",
+    "logout": "sign-out-alt-solid",
+    "read": "envelope-solid",
+    "unread": "envelope-open-solid",
+    "unarchive": "box-open-solid",
+    "next": "angle-right-solid",
+    "prev": "angle-left-solid",
+);
 
 @function icon-url($icon-name) {
     $icon: map-get($map: $icons, $key: $icon-name);
