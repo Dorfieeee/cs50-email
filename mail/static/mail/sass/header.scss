@@ -1,0 +1,6 @@
+@import "./vars.scss";
+
+header {
+    height: $header-height;
+    border-bottom: $border-default;
+}

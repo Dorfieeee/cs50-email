@@ -1,0 +1,56 @@
+{% extends "mail/layout.html" %}
+{% load static %}
+
+{% block body %}
+    
+    <div id="mailbox-view">
+        <table id="mailbox-table" class="table-sm">
+            <colgroup>
+                <col class="sender">
+                <col class="subject">
+                <col class="date">
+                <col class="actions">
+            </colgroup>
+            <tbody id="mailbox-table-list">
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="email-view" class="container-fluid">
+        <h3 id="email-subject"></h3>
+        <div class="email-details">
+            <div class="d-flex">
+                <div id="email-sender"></div>
+                <div id="email-timestamp"></div>
+            </div>
+            <div id="email-recipient"></div>
+        </div>
+        <div id="email-body"></div>
+        <div class="btn btn-outline-dark" id="email-reply">
+            <i class="fas fa-reply mr-2"></i>
+            Reply
+        </div>
+    </div>
+
+    <div id="compose-view" class="container-fluid">
+        <form id="compose-form">
+            <div class="form-group d-none">
+                From: <input disabled hidden class="form-control" value="{{ request.user.email }}">
+            </div>
+            <div class="form-group">
+                To: <input id="compose-recipients" class="form-control">
+            </div>
+            <div class="form-group">
+                <input class="form-control" id="compose-subject" placeholder="Subject">
+            </div>
+            <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
+            <input type="submit" value="Send" class="btn btn-primary"/>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'mail/inbox.js' %}"></script>
+{% endblock %}

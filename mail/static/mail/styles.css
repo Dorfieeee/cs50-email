@@ -1,0 +1,283 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap");
+header {
+  height: 60px;
+  border-bottom: 1px solid rgba(112, 128, 144, 0.3);
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  min-height: 100%;
+}
+
+footer {
+  height: 50px;
+  display: block !important;
+}
+
+nav {
+  width: 200px;
+  border-right: 1px solid rgba(112, 128, 144, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+nav > .nav-item {
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+  cursor: pointer;
+  display: flex;
+  line-height: 20px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 14px;
+  padding-right: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+nav > .nav-item > * {
+  pointer-events: none;
+}
+nav > .nav-item.active {
+  font-weight: 600;
+}
+nav > .nav-item:first-child {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+nav > .nav-item:last-child {
+  margin-bottom: 8px;
+}
+nav > .nav-item:hover {
+  background-color: #f4f7f7;
+}
+nav > .nav-item > .icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 15px;
+  position: relative;
+}
+nav > .nav-item > .icon::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 0;
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.54;
+}
+nav > .nav-item#inbox > .icon::before {
+  background-image: url("./icons/inbox-solid.svg");
+}
+nav > .nav-item#compose > .icon::before {
+  background-image: url("./icons/plus-circle-solid.svg");
+  transition: all 0.15s ease-in;
+}
+nav > .nav-item#compose:hover > .icon::before {
+  transform: scale(1.3) rotateZ(360deg);
+}
+nav > .nav-item#sent > .icon::before {
+  background-image: url("./icons/paper-plane-solid.svg");
+}
+nav > .nav-item#archive > .icon::before {
+  background-image: url("./icons/archive-solid.svg");
+}
+nav > .nav-item[href*=logout] > .icon::before {
+  background-image: url("./icons/sign-out-alt-solid.svg");
+}
+nav > .nav-item > .link a {
+  color: inherit;
+}
+nav > .nav-item > .link a:hover {
+  text-decoration: none;
+}
+
+.spacer {
+  flex: 1;
+}
+
+#app .content {
+  width: calc(100% - 200px);
+}
+
+textarea {
+  min-height: 400px;
+}
+
+.toolbar {
+  height: 50px;
+  border-bottom: 1px solid rgba(112, 128, 144, 0.3);
+  padding: 10px 0;
+}
+.toolbar .menu {
+  height: 30px;
+  padding-left: 14px;
+  padding-right: 10px;
+}
+
+#main-view {
+  height: calc(100vh - 60px - 50px);
+  overflow-y: scroll;
+}
+
+#mailbox-table {
+  width: 100%;
+}
+
+.mailbox-row {
+  cursor: pointer;
+  border-bottom: 1px solid rgba(112, 128, 144, 0.3);
+  padding-bottom: 10px;
+  padding-top: 10px;
+  display: flex;
+}
+.mailbox-row td {
+  height: 20px;
+  padding: 0;
+  font-size: 0.875rem;
+  flex: 0 0 auto;
+}
+.mailbox-row td:focus .sender::before {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: turquoise;
+}
+.mailbox-row td.sender {
+  flex-basis: 168px;
+  padding-left: 14px;
+  padding-right: 18px;
+  overflow: hidden;
+  word-break: break-word;
+}
+.mailbox-row td.subject {
+  flex: 1 0 180px;
+  padding-right: 20px;
+  overflow: hidden;
+  word-break: break-word;
+}
+.mailbox-row td.date {
+  padding-right: 20px;
+}
+.mailbox-row td.action-list {
+  padding-right: 10px;
+}
+.mailbox-row:hover {
+  border-bottom: 1px solid transparent;
+  box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  position: relative;
+}
+.mailbox-row.read {
+  background-color: #f4f7f7;
+}
+.mailbox-row:not(.read) {
+  font-weight: 700;
+}
+.mailbox-row .action-list ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.mailbox-row .action-list ul li {
+  position: relative;
+  opacity: 0.54;
+  height: 20px;
+  width: 20px;
+  border: none;
+  margin: 0 10px;
+  outline: none;
+  display: inline-flex;
+  z-index: 1;
+  background-size: 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.mailbox-row .action-list ul li.re {
+  background-image: url("./icons/envelope-solid.svg");
+}
+.mailbox-row .action-list ul li.ur {
+  background-image: url("./icons/envelope-open-solid.svg");
+}
+.mailbox-row .action-list ul li.ar {
+  background-image: url("./icons/archive-solid.svg");
+}
+.mailbox-row .action-list ul li.ua {
+  background-image: url("./icons/box-open-solid.svg");
+}
+.mailbox-row .action-list ul li:hover, .mailbox-row .action-list ul li:focus {
+  opacity: 1;
+}
+.mailbox-row .action-list ul li:hover::before, .mailbox-row .action-list ul li:focus::before {
+  background-color: rgba(32, 33, 36, 0.059);
+  border: none;
+  box-shadow: none;
+  opacity: 1;
+  transform: scale(1);
+}
+.mailbox-row .action-list ul li::before {
+  content: "";
+  display: block;
+  opacity: 0;
+  position: absolute;
+  transition-duration: 0.15s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+  top: -10px;
+  background: none;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transform: scale(0);
+  transition-property: transform, opacity;
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+  top: -10px;
+}
+.mailbox-row .action-list ul li::after {
+  content: "";
+  height: 200%;
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+}
+
+#email-view {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  padding-left: 14px;
+}
+#email-view #email-subject {
+  font-weight: 400;
+}
+#email-view .email-details {
+  font-size: 0.9em;
+  margin-bottom: 1.5rem;
+}
+#email-view .email-details #email-sender {
+  flex: 1;
+  font-weight: 600;
+}
+#email-view .email-details #email-timestamp {
+  opacity: 0.8;
+}
+#email-view .email-details #email-recipient {
+  opacity: 0.8;
+}
+#email-view .email-details #email-recipient::before {
+  content: "to ";
+  position: relative;
+}
+#email-view #email-body {
+  margin-bottom: 1.5rem;
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -1,0 +1,33 @@
+<nav id="navbar">
+    <div class="nav-item" id="compose">
+        <div class="icon"></div>
+        <div class="link">
+            Compose
+        </div>
+    </div>
+    <div class="nav-item active" id="inbox">
+        <div class="icon"></div>
+        <div class="link">
+            Inbox
+        </div>
+    </div>
+    <div class="nav-item" id="sent">
+        <div class="icon"></div>
+        <div class="link">
+            Sent
+        </div>
+    </div>
+    <div class="nav-item" id="archive">
+        <div class="icon"></div>
+        <div class="link">
+            Archived
+        </div>
+    </div>
+    <div class="spacer"></div>
+    <a class="nav-item" href="{% url 'logout' %}">
+        <div class="icon"></div>
+        <div class="link">
+            Log Out
+        </div>
+    </a>
+</nav>

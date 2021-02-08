@@ -1,0 +1,15 @@
+$icons: ("inbox": "inbox-solid", "compose": "plus-circle-solid", "sent": "paper-plane-solid", "archive": "archive-solid", "logout": "sign-out-alt-solid", "read": "envelope-solid", "unread": "envelope-open-solid", "unarchive": "box-open-solid");
+
+@function icon-url($icon-name) {
+    $icon: map-get($map: $icons, $key: $icon-name);
+    @return url("./icons/#{$icon}.svg")
+}
+
+
+$header-height: 60px;
+$toolbar-height: 50px;
+$footer-height: 50px;
+$main-view-height: calc(100vh - #{$header-height} - #{$toolbar-height});
+$color-secondary: #f4f7f7;
+$border-default: 1px solid rgb(112, 128, 144, 0.3); 
+$navbar-width: 200px;

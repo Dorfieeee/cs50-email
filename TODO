@@ -1,0 +1,10 @@
+# []    Review code logic
+# []    Check Table API
+# []    Create table pagination - Max 30 mails
+# []    Create table filters: sender, subject read/unread
+# []    Prevent making another request on page reload
+# []    Text editor - markup
+# []    Login/register styling
+# []    Compose styling
+
+# []    Long-polling for new emails
