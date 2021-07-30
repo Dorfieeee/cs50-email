@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .views import StreamView
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -12,4 +13,6 @@ urlpatterns = [
     path("emails", views.compose, name="compose"),
     path("emails/<int:email_id>", views.email, name="email"),
     path("emails/<str:mailbox>", views.mailbox, name="mailbox"),
+    # SSE path
+    path('stream/', StreamView.as_view(), name='stream'),
 ]

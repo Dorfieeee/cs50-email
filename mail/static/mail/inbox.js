@@ -15,7 +15,25 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // By default, load the inbox
   load_mailbox(ACTIVE_VIEW);
-  
+
+  const eventSource  = new EventSource("/stream", {withCredentials: true});
+
+  eventSource.onopen = function() {
+    console.log('Yay! its open?');
+  };
+
+  eventSource.onmessage = function(e) {
+    let emails = JSON.parse(e.data);
+    if (ACTIVE_VIEW === "inbox") {
+      MAILBOX.inbox = [...emails];
+      render_mails();
+    }
+  };
+
+  eventSource.onerror = function(e) {
+    console.log(e);
+  };
+
   // Prevent resubmission on page refresh
   if ( window.history.replaceState ) {
     window.history.replaceState( null, null, window.location.href );

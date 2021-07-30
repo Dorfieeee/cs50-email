@@ -2,10 +2,13 @@ import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.views import View
+from django.core.serializers.json import DjangoJSONEncoder
+import time
 
 from .models import User, Email
 
@@ -74,6 +77,7 @@ def compose(request):
 
 @login_required
 def mailbox(request, mailbox):
+    print(request)
 
     # Filter emails returned based on mailbox
     if mailbox == "inbox":
@@ -183,3 +187,25 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "mail/auth/register.html")
+
+def event_stream(user): 
+    initial_data = ""
+    while True:
+        emails = Email.objects.filter(user=user, recipients=user, archived=False)
+        emails = emails.order_by("-timestamp").all()
+        emails = json.dumps([email.serialize() for email in emails], cls=DjangoJSONEncoder)
+
+        if not initial_data == emails:
+            yield "\ndata: {}\n\n".format(emails) 
+            initial_data = emails
+        time.sleep(5)
+
+        
+
+class StreamView(View):
+
+    def get(self, request):
+        response = StreamingHttpResponse(event_stream(request.user))
+        response['Content-Type'] = 'text/event-stream'
+        return response
+
