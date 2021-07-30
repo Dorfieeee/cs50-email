@@ -1,3 +1,5 @@
+import Markdown from './Markdown.js'
+
 document.addEventListener('DOMContentLoaded', function() {
 
   console.clear();
@@ -14,8 +16,27 @@ document.addEventListener('DOMContentLoaded', function() {
   // By default, load the inbox
   load_mailbox(ACTIVE_VIEW);
   
+  // Prevent resubmission on page refresh
+  if ( window.history.replaceState ) {
+    window.history.replaceState( null, null, window.location.href );
+  }
 });
 
+// Initialize APP STATE
+let ACTIVE_VIEW;
+const MAILBOX = {
+  active: [],
+  inbox: [],
+  sent: [],
+  archive: [],
+  step: 0,
+  stepSize: 30,
+  filters: {
+    unreadOnly: false,
+    sender: null,
+    subject: null,
+  }
+};
 
 function next_page(e) {
   e.target.blur();
@@ -55,10 +76,13 @@ function set_active() {
 
 async function email_details(e, id) {
   function populate_fields(mail) {
+    // Init Markdown
+    const markdowner = new Markdown();
+
     document.querySelector("#email-subject").textContent = mail.subject || "(no subject)";
     document.querySelector("#email-sender").textContent = mail.sender;
     document.querySelector("#email-timestamp").textContent = mail.timestamp;
-    document.querySelector("#email-body").textContent = mail.body || "(empty)";
+    document.querySelector("#email-body").innerHTML = markdowner.convert(mail.body) || "(empty)";
     document.querySelector("#email-recipient").textContent = mail.recipients.join(", ");
   
     // init reply button
@@ -104,23 +128,7 @@ async function email_details(e, id) {
 }
 
 function compose_email(mail) {
-  // Init form input fields
-  const compose_recipients = document.querySelector('#compose-recipients');
-  const compose_subject = document.querySelector('#compose-subject');
-  const compose_body = document.querySelector('#compose-body');
-
-  function prepolulate_form(mail) {
-    compose_recipients.value = mail.sender;
-    compose_subject.value = mail.subject.match(/^Re:/) ? mail.subject : "Re: " + mail.subject;
-    compose_body.value = `On ${mail.timestamp} ${mail.sender} wrote:\n${mail.body}`;
-  }
-
-  function clear_form() {
-    compose_recipients.value = '';
-    compose_subject.value = '';
-    compose_body.value = '';
-  }
-
+  document.querySelector("#compose-submit").onclick = send_email;
   // Show compose view and hide other views
   change_view_to("compose-view");
 
@@ -134,41 +142,16 @@ function compose_email(mail) {
     // if mail provided, prepopulate fields
     prepolulate_form(mail);    
     // autofocus body field
-    compose_body.focus();
+    document.querySelector('#editor__raw--content').focus();
   } else {
     // Clear form input fields
     clear_form();
     // autofocus recipient field
-    compose_recipients.focus();
+    document.querySelector('#compose-recipients').focus();
   }
 
 
-  document.querySelector("#compose-form").onsubmit = async function(e) {
-    e.preventDefault();
-    // API call to send mail
-    try {
-      const response = await fetch("/emails", {
-        method: "POST",
-        body: JSON.stringify({
-          recipients: compose_recipients.value,
-          subject: compose_subject.value,
-          body: compose_body.value,
-        })
-      });
-      const result = await response.json();
-      
-      if (result.error) {
-        throw new Error(result.error);
-      }   
-
-      show_toast(result.message);
-      
-      clear_form();
-
-    } catch (error) {
-      show_toast(error);
-    }
-  };
+  document.querySelector("#compose-form").onsubmit = send_email;
 }
 
 async function load_mailbox(type) {
@@ -458,24 +441,47 @@ function update_table_info() {
     document.querySelector("#mailbox-size").innerHTML = `${MAILBOX.step * MAILBOX.stepSize} - ${size} of ${MAILBOX.active.length}`;
 }
 
-// Initialize globals
-let ACTIVE_VIEW;
-const MAILBOX = {
-active: [],
-inbox: [],
-sent: [],
-archive: [],
-step: 0,
-stepSize: 30,
-filters: {
-  unreadOnly: false,
-  sender: null,
-  subject: null,
-}
+async function send_email(e) {
+  e.preventDefault();
+    // Init form input fields
+  const compose_recipients = document.querySelector('#compose-recipients');
+  const compose_subject = document.querySelector('#compose-subject');
+  const compose_body = document.querySelector('#editor__raw--content');
+
+  // API call to send mail
+  try {
+    const response = await fetch("/emails", {
+      method: "POST",
+      body: JSON.stringify({
+        recipients: compose_recipients.value,
+        subject: compose_subject.value,
+        body: compose_body.value,
+      })
+    });
+    const result = await response.json();
+    
+    if (result.error) {
+      throw new Error(result.error);
+    }   
+
+    show_toast(result.message);
+    
+    clear_form();
+
+  } catch (error) {
+    show_toast(error);
+  }
 };
 
+function prepolulate_form(mail) {
+  document.querySelector('#compose-recipients').value = mail.sender;
+  document.querySelector('#compose-subject').value = mail.subject.match(/^Re:/) ? mail.subject : "Re: " + mail.subject;
+  document.querySelector('#editor__raw--content').value = `**On ${mail.timestamp} ${mail.sender} wrote:**\n${mail.body}`;
+}
 
-
-
-
-
+function clear_form() {
+  document.querySelector('#compose-recipients').value = '';
+  document.querySelector('#compose-subject').value = '';
+  document.querySelector('#editor__raw--content').value = '';
+  document.querySelector("#editor__preview--content").innerHTML = "";
+}

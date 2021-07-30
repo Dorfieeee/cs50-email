@@ -1,0 +1,34 @@
+{% extends "mail/auth/auth_layout.html" %}
+
+{% block title %} Login {% endblock %}
+
+{% block body %}
+
+    <h2>Login</h2>
+    
+    <div class="error">
+        {% if message %}
+            {{ message }}
+        {% endif %}
+    </div>
+
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="email"><i class="fas fa-at"></i></span>
+            </div>
+            <input autofocus class="form-control" type="email" name="email" placeholder="Email" aria-describedby="email">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="password"><i class="fas fa-key"></i></span>
+            </div>
+            <input autofocus class="form-control" type="password" name="password" placeholder="Password" aria-describedby="password">
+          </div>
+        <input class="btn btn-primary" type="submit" value="Login">
+    </form>
+
+    <p class="mt-5">Don't have an account? <a href="{% url 'register' %}">Register here.</a></p>
+
+{% endblock %}

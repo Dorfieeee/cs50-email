@@ -2,9 +2,9 @@
 # [x]    Check Table API
 # [x]    Create table pagination - Max 30 mails
 # [x]    Create table filters: unread only
-# []    Prevent making another request on page reload
-# []    Text editor - markup
-# []    Login/register styling
-# []    Compose styling
+# [x]    Prevent making another request on page reload
+# [x]    Text editor - markup
+# [x]    Login/register styling
+# [x]    Compose styling
 
 # []    Long-polling for new emails

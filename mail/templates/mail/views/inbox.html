@@ -1,0 +1,15 @@
+{% extends "mail/layout.html" %}
+{% load static %}
+
+{% block body %}
+    {% include "mail/views/mailbox-view.html" %}
+
+    {% include "mail/views/email-view.html" %}
+
+    {% include "mail/views/compose-view.html" %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'mail/inbox.js' %}" type="module"></script>
+    <script src="{% static 'mail/editor.js' %}" type="module"></script>
+{% endblock %}

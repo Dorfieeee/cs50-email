@@ -1,0 +1,35 @@
+<div id="compose-view" class="container-fluid">
+    <form id="compose-form" class="mt-3">
+        <!-- INPUT FIELDS -->
+        <div class="form-group d-none">
+            <input disabled hidden class="form-control" value="{{ request.user.email }}" placeholder="Sender">
+        </div>
+        <div class="form-group">
+            <input id="compose-recipients" class="form-control" placeholder="Recipients">
+        </div>
+        <div class="form-group">
+            <input class="form-control" id="compose-subject" placeholder="Subject">
+        </div>
+        <!-- EDITOR -->
+        <div id="editor" class="editor row no-gutters">
+            <div id="editor__edit-panel">
+                <button type="button" class="btn btn-sm" data-action="heading" title="Heading"><i class="fas fa-heading"></i></button>
+                <button type="button" class="btn btn-sm" data-action="link" title="Link"><i class="fas fa-link"></i></button>
+                <button type="button" class="btn btn-sm" data-action="code" title="Code"><i class="fas fa-code"></i></button>
+                <button type="button" class="btn btn-sm" data-action="bold" title="Bold"><i class="fas fa-bold"></i></button>
+                <button type="button" class="btn btn-sm" data-action="list" title="List"><i class="fas fa-list-ul"></i></button>
+                <button title="Preview" id="preview-toggler" type="button" class="btn btn-sm"><i class="fas fa-eye"></i></button>
+                <div class="flex-grow-1"></div>
+                <a href="javascript:void(0)" id="compose-submit" class="btn btn-sm" role="button" data-toggle="tooltip" tabindex="0" data-original-title="Send"><i class="fas fa-paper-plane"></i></a>
+            </div>
+            <div id="editor__raw">
+                <textarea id="editor__raw--content" name="content" class="scrollbar">{{content}}</textarea>
+            </div>  
+            <div id="editor__preview" class="scrollbar">
+                <div id="editor__preview--content"></div>
+            </div>                    
+        </div>
+        <!-- EDITOR END -->
+        <input type="submit" value="Send" class="btn btn-primary" hidden/>
+    </form>
+</div>
